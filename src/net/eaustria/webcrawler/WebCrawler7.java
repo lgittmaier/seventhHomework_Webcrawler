@@ -21,14 +21,17 @@ public class WebCrawler7 implements ILinkHandler {
 //    private final Collection<String> visitedLinks = Collections.synchronizedList(new ArrayList<String>());
     private String url;
     private ForkJoinPool mainPool;
+    private int maxThreads;
 
     public WebCrawler7(String startingURL, int maxThreads) {
         this.url = startingURL;
         this.mainPool = new ForkJoinPool();
+        this.maxThreads = maxThreads;
     }
 
     private void startCrawling() {
-        LinkFinderAction lfa = new LinkFinderAction(url, new WebCrawler7(url, 15));
+        LinkFinderAction lfa = new LinkFinderAction(url, this);
+        mainPool.invoke(lfa);
     }
 
     @Override
